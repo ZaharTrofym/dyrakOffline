@@ -37,6 +37,15 @@ int main() {
     vector<string> player1(6);
     vector<string> player2(6);
 
-    deckk.start(player1);
-    deckk.start(player2);
+    player1 = deckk.start(player1);
+    player2 = deckk.start(player2);
+    int choose;
+    
+    while((player1.size() || player2.size()) && card_deck.size() == 0) {
+        cout << "Ти ходиш первим \nВибери карту з тих які в тебе є\nВведи цифру під якою знаходиться карта\n";
+        for (int i = 0; i < player1.size(); i++) {
+            cout << i + 1 << ". " << player1[i] << endl;
+        }
+        cin >> choose;
+    }
 }
