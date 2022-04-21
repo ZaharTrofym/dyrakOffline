@@ -4,19 +4,6 @@
 
 using namespace std;
 
-class CardDeck {
-    private:
-        vector<string> suit;
-
-    public:
-        void addSuits() {
-            suit.push_back("Чірва");
-            suit.push_back("Піка");
-            suit.push_back("Креста");
-            suit.push_back("Буба");
-        }
-};
-
 int main() {
     vector<vector<string> > card_deck;
     string suits[4] = {"Чірва", "Піка", "Буба", "Креста"};
