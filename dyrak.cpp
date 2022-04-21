@@ -12,6 +12,14 @@ class Card_deck {
         void getDeck(vector<string> deck) {
             this->deck = deck;
         }
+
+        vector<string> start(vector<string> player) {
+            for (int i = 0; i < 6; i++) {
+            player[i] = deck[deck.size() - 1];
+            deck.pop_back();
+            }
+            return player;
+        }
 };
 
 int main() {
@@ -29,8 +37,6 @@ int main() {
     vector<string> player1(6);
     vector<string> player2(6);
 
-    for (int i = 0; i < 6; i++) {
-        player1[i] = card_deck[card_deck.size() - 1];
-        card_deck.pop_back();
-    }
+    deckk.start(player1);
+    deckk.start(player2);
 }
