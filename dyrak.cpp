@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Card_deck {
+class CardDeck {
     private:
         vector<string> deck;
     public:
@@ -22,10 +22,28 @@ class Card_deck {
         }
 };
 
+class Player {
+    private:
+        vector<Card> cards;
+};
+
+class Card {
+    private:
+        int id = 0;
+        int type = 1;
+        string name = "";
+        int nominal = 0;
+        bool isRoot = false;
+};
+
+class Engine {
+
+};
+
 int main() {
     srand(time(NULL));
 
-    Card_deck deckk;
+    CardDeck deckk;
     vector<string> card_deck(52);
     string suits[4] = {"Чірва", "Піка", "Буба", "Креста"};
     string cards[13] = {"Два", "Три", "Чотири", "П'ять", "Шість", "Сім", "Вісім", "Дев'ять", "Десять", "Валет", "Дама", "Король", "Туз"};
