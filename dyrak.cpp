@@ -40,12 +40,17 @@ int main() {
     player1 = deckk.start(player1);
     player2 = deckk.start(player2);
     int choose;
+    bool winOrLose = true;
     
-    while((player1.size() || player2.size()) && card_deck.size() == 0) {
+    while (winOrLose) {
         cout << "Ти ходиш первим \nВибери карту з тих які в тебе є\nВведи цифру під якою знаходиться карта\n";
         for (int i = 0; i < player1.size(); i++) {
             cout << i + 1 << ". " << player1[i] << endl;
         }
         cin >> choose;
+
+        if ((player1.size() || player2.size()) && card_deck.size() == 0) {
+            winOrLose = false;
+        }
     }
 }
