@@ -5,70 +5,152 @@
 
 using namespace std;
 
-class CardDeck {
+
+class Card {
     private:
-        vector<string> deck;
+        int type;
+        string name;
+        int nominal;
+        bool isRoot;
     public:
-        void getDeck(vector<string> deck) {
-            this->deck = deck;
+        Card(int type, string name, int nominal, bool isRoot) {
+            this->type = type;
+            this->name = name;
+            this->nominal = nominal;
+            this->isRoot = isRoot;
         }
 
-        vector<string> start(vector<string> player) {
-            for (int i = 0; i < 6; i++) {
-            player[i] = deck[deck.size() - 1];
-            deck.pop_back();
-            }
-            return player;
+        bool getCard() {
+            return isRoot;
         }
 };
 
 class Player {
     private:
-        vector<Card> cards;
+        vector<Card*> cards;
+    public:
+        void addCard(Card* card) {
+            cards.push_back(card);
+        }
+
+        void showCards() {
+            for (int i = 0; i < 6; i++) {
+                cout << cards[i] << endl;
+            }
+        }
 };
 
-class Card {
+class Deck {
     private:
-        int id = 0;
-        int type = 1;
-        string name = "";
-        int nominal = 0;
-        bool isRoot = false;
+        vector<Card*> deck;
+        vector<Card*> shuffle_deck;
+    public:
+        void addCardToDeck(Card* card) {
+            deck.push_back(card);
+        }
+
+        void addCardToShuffle(Card* card) {
+            shuffle_deck.push_back(card);
+        }
+
+        void showCards() {
+            bool card;
+            for(int i = 0; i < 52; i++) {
+                card = shuffle_deck[i]->getCard();
+                cout << card << endl;
+            }
+        }
+
+        Card* deleteAndReturnCard() {
+            return shuffle_deck[rand() % shuffle_deck.size()];
+        }
+
+        vector<Card*> getShuffleDeck() {
+            return shuffle_deck;
+        }
+
+        Card* getRandomCardInDeck() {
+            return deck[rand() % deck.size()];
+        }
 };
 
 class Engine {
+    private:
+        string suits[4] = {"Чірва", "Піка", "Буба", "Креста"};
+        string cards[13] = {"Два", "Три", "Чотири", "П'ять", "Шість", "Сім", "Вісім", "Дев'ять", "Десять", "Валет", "Дама", "Король", "Туз"};
+        int root;
+        bool isRoot;
+    public:
+        Engine() {
+            root = rand() % 4 + 1;
+        }
 
+        Deck* generateDeck() {
+            Deck* deck = new Deck();
+            vector<Card*> shuffle_deck;
+
+            for (int i = 0; i < 4; i++) {
+                if (i + 1 == root) {
+                    isRoot = true;
+                }
+                else {
+                    isRoot = false;
+                }
+
+                for (int j = 0; j < 13; j++) {
+                    deck->addCardToDeck(generateCard(i + 1, cards[j], j + 1, this->isRoot));
+                } 
+            }
+            
+            Card* card;
+            bool inDeck;
+            int i = 0;
+            while(i < 52) {
+                card = deck->getRandomCardInDeck();
+                inDeck = false;
+                for (int i = 0; i < shuffle_deck.size(); i++) {
+                    if (card == shuffle_deck[i]) {
+                        inDeck = true;
+                    }
+                }
+                if (inDeck == false) {
+                    shuffle_deck.push_back(card);
+                    i++;
+                }
+            }
+
+            return deck;
+        }
+
+        Card* generateCard(int type, string name, int nominal, bool isRoot) {
+            Card* card = new Card(type, name, nominal, isRoot);
+
+            return card;
+        }
+
+        Player* generatePlayer(Deck* deck) {
+            Player* player = new Player();
+            for (int i = 0; i < 6; i++) {
+                player->addCard(deck->deleteAndReturnCard());
+            }
+
+            return player;
+        }
+
+        void showRoot() {
+            for(int i = 0; i < 4; i++) {
+                if (root == i + 1) {
+                    cout << "\nКозирь - " << suits[i] << endl;
+                }
+            } 
+        }
 };
 
 int main() {
     srand(time(NULL));
+    Engine* engine = new Engine();
+    Deck* deck = engine->generateDeck();
+    Player* player1 = engine->generatePlayer(deck);
 
-    CardDeck deckk;
-    vector<string> card_deck(52);
-    string suits[4] = {"Чірва", "Піка", "Буба", "Креста"};
-    string cards[13] = {"Два", "Три", "Чотири", "П'ять", "Шість", "Сім", "Вісім", "Дев'ять", "Десять", "Валет", "Дама", "Король", "Туз"};
-    
-    for (int i = 0; i < card_deck.size(); i++) {
-        card_deck[i] = cards[rand() % 13] + " " + suits[rand() % 4];
-    }
-    deckk.getDeck(card_deck);
-    vector<string> player1(6);
-    vector<string> player2(6);
-
-    player1 = deckk.start(player1);
-    player2 = deckk.start(player2);
-    int choose;
-    bool winOrLose = true;
-    
-    while (winOrLose) {
-        cout << "Ти ходиш первим \nВибери карту з тих які в тебе є\nВведи цифру під якою знаходиться карта\n";
-        for (int i = 0; i < player1.size(); i++) {
-            cout << i + 1 << ". " << player1[i] << endl;
-        }
-        cin >> choose;
-
-        if ((player1.size() || player2.size()) && card_deck.size() == 0) {
-            winOrLose = false;
-        }
-    }
+    cout << 234214132;
 }
