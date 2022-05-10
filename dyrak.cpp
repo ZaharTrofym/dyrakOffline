@@ -54,7 +54,7 @@ class Player {
         void showCardsForWalk(string suits[4]) {
             cout << "\nВведи номер карти щоб походити нею";
             for (int i = 0; i < cards.size(); i++) {
-                cout << "\n" <<i + 1 << ". " << cards[i]->getName() << " " << suits[cards[i]->getType() - 1];
+                cout << "\n" << i + 1 << ". " << cards[i]->getName() << " " << suits[cards[i]->getType() - 1];
             }
             cout << endl;
         }
@@ -210,10 +210,10 @@ class Engine {
                 if (deck->getShuffleDeck().size() > 0) {  //відповідає за заповнення карт гравців
                     if (player1->getCards().size() < player2->getCards().size()) {
                         for (int i = 0; i < 6 - player1->getCards().size(); i++) {
-                            if (deck->getShuffleDeck().size() != 0) {
+                            if (deck->getShuffleDeck().size() != 0 && player1->getCards().size() < 6) {
                                 player1->addCard(deck->getCardInShuffleDeck());
                             }
-                            if (deck->getShuffleDeck().size() != 0 && player2->getCards().size() < 7) {
+                            if (deck->getShuffleDeck().size() != 0 && player2->getCards().size() < 6) {
                                 player2->addCard(deck->getCardInShuffleDeck());
                             }
                         }
@@ -221,10 +221,10 @@ class Engine {
 
                     if (player2->getCards().size() < player1->getCards().size()) {
                         for (int i = 0; i < 6 - player2->getCards().size(); i++) {
-                            if (deck->getShuffleDeck().size() != 0) {
+                            if (deck->getShuffleDeck().size() != 0 && player2->getCards().size() < 6) {
                                 player2->addCard(deck->getCardInShuffleDeck());
                             }
-                            if (deck->getShuffleDeck().size() != 0 && player1->getCards().size() < 7) {
+                            if (deck->getShuffleDeck().size() != 0 && player1->getCards().size() < 6) {
                                 player1->addCard(deck->getCardInShuffleDeck());
                             }
                         }
@@ -272,7 +272,6 @@ class Engine {
                     }
                     if (x == 1) {
                         player2->removeCard(num2);
-                        walker.push_back(card2);
                     }
 
                     if (x == 0) {  //якщо немає чим побити карту
@@ -283,14 +282,13 @@ class Engine {
                     }
                     else {  //суперник відстояв атаку
                         cout << walker[0]->getName() << " " << suits[walker[0]->getType() - 1] << " -> " << card2->getName() << " " << suits[card2->getType() - 1];
-
-                        walker.pop_back();
                     }
 
                     pause();
                 }
                 else {
                     cout << "\nВи ввели не правльну цифру. Почнемо з початку";
+
                     return false;
                 }
             }
@@ -300,10 +298,10 @@ class Engine {
                 if (deck->getShuffleDeck().size() > 0) {  //додавання карт якщо їх не вистачає
                     if (player1->getCards().size() < player2->getCards().size()) {
                         for (int i = 0; i < 6 - player1->getCards().size(); i++) {
-                            if (deck->getShuffleDeck().size() != 0) {
+                            if (deck->getShuffleDeck().size() != 0 && player1->getCards().size() < 6) {
                                 player1->addCard(deck->getCardInShuffleDeck());
                             }
-                            if (deck->getShuffleDeck().size() != 0 && player2->getCards().size() < 7) {
+                            if (deck->getShuffleDeck().size() != 0 && player2->getCards().size() < 6) {
                                 player2->addCard(deck->getCardInShuffleDeck());
                             }
                         }
@@ -311,10 +309,10 @@ class Engine {
 
                     if (player2->getCards().size() < player1->getCards().size()) {
                         for (int i = 0; i < 6 - player2->getCards().size(); i++) {
-                            if (deck->getShuffleDeck().size() != 0) {
+                            if (deck->getShuffleDeck().size() != 0 && player2->getCards().size() < 6) {
                                 player2->addCard(deck->getCardInShuffleDeck());
                             }
-                            if (deck->getShuffleDeck().size() != 0 && player1->getCards().size() < 7) {
+                            if (deck->getShuffleDeck().size() != 0 && player1->getCards().size() < 6) {
                                 player1->addCard(deck->getCardInShuffleDeck());
                             }
                         }
@@ -390,8 +388,13 @@ class Engine {
                     
                     return false;
                 }
-                else if (num2 > 0 && num2 < temp.size()) {
-                    pause();
+                else if (num2 > 0 && num2 < temp.size() + 1) {
+                    for (int i = 0; i < player1->getCards().size(); i++) {
+                        if (temp[num2 - 1] == player1->getCards()[i]) {
+                            player1->removeCard(i + 1);
+                        }
+                    }
+
                     cout << walker[0]->getName() << " " << suits[walker[0]->getType() - 1] << " -> " << temp[num2 - 1]->getName() << " " << suits[temp[num2 - 1]->getType() - 1];
 
                     return false;
@@ -435,9 +438,15 @@ int main() {
             if (engine->getWalk() == 1 && engine->getTakeCards() == false) {
                 engine->setWalk(2);
             }
-            else if (engine->getWalk() == 1 && engine->getTakeCards() == false) {
+            else if (engine->getWalk() == 2 && engine->getTakeCards() == false) {
                 engine->setWalk(1);
             }
+            // if (engine->getWalk() == 1 && engine->getTakeCards() == false) {
+            //     engine->setWalk(2);
+            // }
+            // else if (engine->getWalk() == 1 && engine->getTakeCards() == false) {
+            //     engine->setWalk(1);
+            // }
     }
 
     pause("\nкінець\n");
