@@ -119,8 +119,10 @@ class Engine {
     private:
         string suits[4] = {"Чірва", "Піка", "Буба", "Креста"};
         string cards[13] = {"Два", "Три", "Чотири", "П'ять", "Шість", "Сім", "Вісім", "Дев'ять", "Десять", "Валет", "Дама", "Король", "Туз"};
+        int walk;
         int root;
         bool isRoot;
+        bool takeCards;
     public:
         Engine() {
             root = rand() % 4 + 1;
@@ -187,8 +189,21 @@ class Engine {
             } 
         }
 
-        bool oneRound(Player* player1, Player* player2, Deck* deck, int walk = 2) {
+        int getWalk() {
+            return walk;
+        }
+        
+        void setWalk(int walk) {
+            this->walk = walk;
+        }
+
+        bool getTakeCards() {
+            return takeCards;
+        }
+
+        bool oneRound(Player* player1, Player* player2, Deck* deck) {
             int num1, num2, x = 0;
+            takeCards = false;
             vector<Card*> walker;
             
             if (walk == 1) {  //хід гравця
@@ -262,6 +277,7 @@ class Engine {
 
                     if (x == 0) {  //якщо немає чим побити карту
                         cout << "\nСуперник забирає карти ";
+                        takeCards = true;
                         player2->addCard(walker[0]);
                         pause();
                     }
@@ -362,12 +378,14 @@ class Engine {
                 }
                 else {
                     cout << "\nТи не можеш відбити атаку, тому забираєш карти\n";
+                    takeCards = true;
                     player1->getCards().push_back(walker[0]);
 
                     return false;
                 }
                 if (num2 == take) {
                     cout << "\nТи вирішив взяти карти\n";
+                    takeCards = true;
                     player1->getCards().push_back(walker[0]);
                     
                     return false;
@@ -380,6 +398,7 @@ class Engine {
                 }
                 else {
                     cout << "\nТи ввів не ту цифру, тому щоб не було помилки ти взяв карти\n";
+                    takeCards = true;
                     player1->getCards().push_back(walker[0]);
                     
                     return false;
@@ -401,24 +420,23 @@ int main() {
     pause("Якщо хочеш продовжити нажми Enter: ");
 
     engine->showRoot();
-
-    int walk = 1;
+    engine->setWalk(1);
 
     while(!isEnd) {
-            if (walk == 1) {
+            if (engine->getWalk() == 1) {
                 cout << "\nВаш хід";
             }
             else {
                 cout << "\nХід суперника";
             }
             pause();
-            engine->oneRound(player1, player2, deck, walk);
+            engine->oneRound(player1, player2, deck);
 
-            if (walk == 1) {
-                walk = 2;
+            if (engine->getWalk() == 1 && engine->getTakeCards() == false) {
+                engine->setWalk(2);
             }
-            else {
-                walk = 1;
+            else if (engine->getWalk() == 1 && engine->getTakeCards() == false) {
+                engine->setWalk(1);
             }
     }
 
